@@ -1,7 +1,7 @@
 import vtk
 import os
 
-filePath = "../Data/case6_gre1.nrrd"
+filePath = "Data/case6_gre1.nrrd"
 reader = vtk.vtkNrrdReader()
 reader.SetFileName(filePath)
 
@@ -68,6 +68,7 @@ renderer.AddActor(actor)
 
 window = vtk.vtkRenderWindow()
 window.AddRenderer(renderer)
+window.SetSize(1000, 1000)
 
 # Set up the interaction
 interactorStyle = vtk.vtkInteractorStyleImage()
@@ -75,6 +76,22 @@ interactor = vtk.vtkRenderWindowInteractor()
 interactor.SetInteractorStyle(interactorStyle)
 window.SetInteractor(interactor)
 window.Render()
+
+# vtkNew<vtkTexturedButtonRepresentation2D> buttonRepresentation;
+#   buttonRepresentation->SetNumberOfStates(2);
+#   buttonRepresentation->SetButtonTexture(0, image1);
+#   buttonRepresentation->SetButtonTexture(1, image2);
+
+image1 = vtk.vtkImageData()
+image1.SetDimensions(10, 10, 1)
+
+buttonRepresentation = vtk.vtkButtonRepresentation()
+buttonRepresentation.SetNumberOfStates(2)
+buttonRepresentation.SetButtonTesture(0, ...)
+buttonRepresentation.SetButtonTesture(1, ...)
+
+buttonActor = vtk.vtkButtonWidget()
+buttonActor.SetInteractor(interactor)
 
 # Create callbacks for slicing the image
 actions = {}
