@@ -17,7 +17,8 @@ reslices = []
 actions = {}
 actions["Slicing"] = 0
 actions["Axes"] = []
-actions["matrices_index"] = 3
+actions["AxesNames"] = ["Sagittal", "Axial", "Coronal"] #, "Oblique"]
+actions["matrices_index"] = 0
 
 for i in range(2):
     reader = vtk.vtkNrrdReader()
@@ -33,20 +34,20 @@ for i in range(2):
               z0 + zSpacing * 0.5 * (zMin + zMax)]
 
     # Matrices for axial, coronal, sagittal, oblique view orientations
-    axial = vtk.vtkMatrix4x4()
-    axial.DeepCopy((1, 0, 0, center[0],
-                    0, 1, 0, center[1],
+    sagittal = vtk.vtkMatrix4x4()
+    sagittal.DeepCopy((1, 0, 0, center[0],
+                    0, -1, 0, center[1],
                     0, 0, 1, center[2],
                     0, 0, 0, 1))
 
-    coronal = vtk.vtkMatrix4x4()
-    coronal.DeepCopy((1, 0, 0, center[0],
+    axial = vtk.vtkMatrix4x4()
+    axial.DeepCopy((1, 0, 0, center[0],
                       0, 0, 1, center[1],
                       0,-1, 0, center[2],
                       0, 0, 0, 1))
 
-    sagittal = vtk.vtkMatrix4x4()
-    sagittal.DeepCopy((0, 0,-1, center[0],
+    coronal = vtk.vtkMatrix4x4()
+    coronal.DeepCopy((0, 0,-1, center[0],
                        1, 0, 0, center[1],
                        0,-1, 0, center[2],
                        0, 0, 0, 1))
@@ -57,14 +58,14 @@ for i in range(2):
                       0, 0.5, 0.866025, center[2],
                       0, 0, 0, 1))
 
-    actions["Axes"].append( [axial, coronal, sagittal, oblique] )
+    actions["Axes"].append( [sagittal, axial, coronal, oblique] )
 
 
     # Extract a slice in the desired orientation
     reslice = vtk.vtkImageReslice()
     reslice.SetInputConnection(reader.GetOutputPort())
     reslice.SetOutputDimensionality(2)
-    reslice.SetResliceAxes(oblique)
+    reslice.SetResliceAxes(sagittal)
     reslice.SetInterpolationModeToLinear()
     reslices.append(reslice)
 
@@ -92,7 +93,7 @@ for i in range(2):
     window.AddRenderer(renderer)
 
 window.SetSize(1000, 500)
-window.SetWindowName("VITK")
+window.SetWindowName("VITK Sagittal")
 
 # Set up the interaction
 interactorStyle = vtk.vtkInteractorStyleImage()
@@ -105,12 +106,13 @@ def ButtonCallback(obj, event):
     actions["Slicing"] = event == "LeftButtonPressEvent"
     if event == "RightButtonPressEvent":
         actions["matrices_index"] += 1
-        actions["matrices_index"] %= 4
+        actions["matrices_index"] %= len(actions["AxesNames"])
 
         for i in range(2):
             reslices[i].SetResliceAxes(actions["Axes"][i][actions["matrices_index"]])
             reslices[i].Update()
         window.Render()
+        window.SetWindowName("VITK " + actions["AxesNames"][actions["matrices_index"]])
 
 def MouseMoveCallback(obj, event):
     (lastX, lastY) = interactor.GetLastEventPosition()
@@ -137,7 +139,6 @@ interactorStyle.AddObserver("MouseMoveEvent", MouseMoveCallback)
 interactorStyle.AddObserver("LeftButtonPressEvent", ButtonCallback)
 interactorStyle.AddObserver("RightButtonPressEvent", ButtonCallback)
 interactorStyle.AddObserver("LeftButtonReleaseEvent", ButtonCallback)
-# interactorStyle.SetInteractionModeToImage3D()
 
 # Start interaction
 interactor.Start()
