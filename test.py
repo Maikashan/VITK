@@ -3,7 +3,24 @@ import os
 from vtk.util.numpy_support import vtk_to_numpy
 import numpy as np
 
-filePaths = ["Data/case6_gre1.nrrd", "Data/case6_gre2.nrrd"]
+class MouseInteractorHighLightActor(vtk.vtkInteractorStyleTrackballCamera):
+
+    def __init__(self, parent=None):
+        self.AddObserver("LeftButtonPressEvent", self.leftButtonPressEvent)
+
+        self.LastPickedActor = None
+        self.LastPickedProperty = vtk.vtkProperty()
+
+    def leftButtonPressEvent(self, obj, event):
+        clickPos = self.GetInteractor().GetEventPosition()
+        print(clickPos)
+
+        self.OnLeftButtonDown()
+        return
+
+filePaths = ["Data/case6_gre1.nrrd",
+             # "Data/case6_gre2.nrrd"]
+             "test.nrrd"]
 
 xmins = [0, .5]
 xmaxs = [0.5, 1]
@@ -97,8 +114,13 @@ window.SetWindowName("VITK Sagittal")
 
 # Set up the interaction
 interactorStyle = vtk.vtkInteractorStyleImage()
+# picker = vtk.vtkPointPicker()
+
+# interactorStyle = MouseInteractorHighLightActor()
+
 interactor = vtk.vtkRenderWindowInteractor()
 interactor.SetInteractorStyle(interactorStyle)
+# interactor.SetPicker(picker)
 window.SetInteractor(interactor)
 window.Render()
 
@@ -130,6 +152,7 @@ def MouseMoveCallback(obj, event):
             matrix.SetElement(0, 3, center[0])
             matrix.SetElement(1, 3, center[1])
             matrix.SetElement(2, 3, center[2])
+            print(matrix)
         window.Render()
     else:
         interactorStyle.OnMouseMove()
