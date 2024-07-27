@@ -4,27 +4,33 @@ import matplotlib
 import matplotlib.pyplot as plt
 
 # input_filepath = 'Data/brain.png'
-input_filepath = 'Data/case6_gre1.nrrd'
-output_filepath = 'test.nrrd'
+input_filepath = "Data/case6_gre1.nrrd"
+output_filepath = "test.nrrd"
 
-seedX = 79
-seedY = 97
-seedZ = 100
+seedX = 122
+seedY = 65
+seedZ = 84
 
 # seedX = 85
 # seedY = 120
 # seedZ = 188
 
-lower = 300.0
-upper = 1200.0
+seed = itk.Index[3]([seedX, seedY, seedZ])
 
-input_image = itk.imread(input_filepath, pixel_type=itk.F)
+lower = 600.0
+upper = 900.0
+
+input_image = itk.imread(input_filepath, pixel_type=itk.D)
+
+plt.imshow(input_image[seedZ], cmap="gray")
+plt.plot(seedX, seedY, "ro")  # red dot for the seed point
+plt.title(f"Slice {seedZ } with Seed Point")
+plt.show()
+plt.waitforbuttonpress()
+print("val", input_image[seedZ, seedX, seedY])
 
 smoother = itk.GradientAnisotropicDiffusionImageFilter.New(
-    Input=input_image,
-    NumberOfIterations=20,
-    TimeStep=0.04,
-    ConductanceParameter=3
+    Input=input_image, NumberOfIterations=20, TimeStep=0.04, ConductanceParameter=3
 )
 smoother.Update()
 itk.imwrite(smoother, "smoother.nrrd")
@@ -43,7 +49,7 @@ connected_threshold = itk.ConnectedThresholdImageFilter.New(smoother.GetOutput()
 connected_threshold.SetReplaceValue(1374)
 connected_threshold.SetLower(lower)
 connected_threshold.SetUpper(upper)
-connected_threshold.SetSeed((seedX, seedY, seedZ))
+connected_threshold.SetSeed(seed)
 # connected_threshold.SetSeed((seedX + 10, seedY - 10, seedZ + 5))
 connected_threshold.Update()
 
@@ -58,4 +64,3 @@ print("COnnected")
 # rescaler.SetOutputMaximum(255)
 
 itk.imwrite(connected_threshold, output_filepath)
-
