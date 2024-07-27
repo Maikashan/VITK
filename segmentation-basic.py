@@ -15,8 +15,8 @@ seedZ = 100
 # seedY = 120
 # seedZ = 188
 
-lower = 0.0
-upper = 255.0
+lower = 300.0
+upper = 1200.0
 
 input_image = itk.imread(input_filepath, pixel_type=itk.F)
 
@@ -40,7 +40,7 @@ print("Input")
 # plt.waitforbuttonpress()
 
 connected_threshold = itk.ConnectedThresholdImageFilter.New(smoother.GetOutput())
-connected_threshold.SetReplaceValue(255)
+connected_threshold.SetReplaceValue(1374)
 connected_threshold.SetLower(lower)
 connected_threshold.SetUpper(upper)
 connected_threshold.SetSeed((seedX, seedY, seedZ))
