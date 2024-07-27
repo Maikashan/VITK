@@ -3,87 +3,95 @@ from observer import CommandIterationUpdate
 from itk.support.types import PixelTypes
 
 
-PixelType = itk.D
-fixed_image = itk.imread("Data/case6_gre1.nrrd", PixelType)
-moving_image = itk.imread("Data/case6_gre2.nrrd", PixelType)
-dimension = fixed_image.GetImageDimension()
-FixedImageType = type(fixed_image)
-MovingImageType = type(moving_image)
+def register_images(fixed_path, moving_path, save_path):
+    PixelType = itk.D
+    fixed_image = itk.imread(fixed_path, PixelType)
+    moving_image = itk.imread(moving_path, PixelType)
+    dimension = fixed_image.GetImageDimension()
+    FixedImageType = type(fixed_image)
+    MovingImageType = type(moving_image)
 
-TransformType = itk.TranslationTransform[itk.D, dimension]
-initial_transform = TransformType.New()
+    TransformType = itk.TranslationTransform[itk.D, dimension]
+    initial_transform = TransformType.New()
 
-optimizer = itk.RegularStepGradientDescentOptimizerv4.New()
-optimizer.SetLearningRate(0.5)
-optimizer.SetMinimumStepLength(0.001)
-optimizer.SetMaximumStepSizeInPhysicalUnits(0.1)
-optimizer.SetNumberOfIterations(200)
-optimizer.SetRelaxationFactor(0.5)
+    optimizer = itk.RegularStepGradientDescentOptimizerv4.New()
+    optimizer.SetLearningRate(0.5)
+    optimizer.SetMinimumStepLength(0.001)
+    optimizer.SetMaximumStepSizeInPhysicalUnits(0.1)
+    optimizer.SetNumberOfIterations(200)
+    optimizer.SetRelaxationFactor(0.5)
 
-iteration_update = CommandIterationUpdate(optimizer)
+    iteration_update = CommandIterationUpdate(optimizer)
 
-image1_interpolation = itk.LinearInterpolateImageFunction[FixedImageType, itk.D].New()
-metric = itk.MeanSquaresImageToImageMetricv4[FixedImageType, MovingImageType].New()
-metric.SetFixedInterpolator(image1_interpolation)
-metric2 = itk.CorrelationImageToImageMetricv4[FixedImageType, MovingImageType].New()
-metric2.SetFixedInterpolator(image1_interpolation)
-metric3 = itk.MattesMutualInformationImageToImageMetricv4[
-    FixedImageType, MovingImageType
-].New()
-metric3.SetFixedInterpolator(image1_interpolation)
+    image1_interpolation = itk.LinearInterpolateImageFunction[FixedImageType, itk.D].New()
+    metric = itk.MeanSquaresImageToImageMetricv4[FixedImageType, MovingImageType].New()
+    metric.SetFixedInterpolator(image1_interpolation)
+    metric2 = itk.CorrelationImageToImageMetricv4[FixedImageType, MovingImageType].New()
+    metric2.SetFixedInterpolator(image1_interpolation)
+    metric3 = itk.MattesMutualInformationImageToImageMetricv4[
+        FixedImageType, MovingImageType
+    ].New()
+    metric3.SetFixedInterpolator(image1_interpolation)
 
-registration = itk.ImageRegistrationMethodv4[FixedImageType, MovingImageType].New(
-    FixedImage=fixed_image,
-    MovingImage=moving_image,
-    Metric=metric,
-    Optimizer=optimizer,
-    InitialTransform=initial_transform,
-)
-registration.SetNumberOfLevels(3)
-registration.SetSmoothingSigmasPerLevel([0])
-registration.SetShrinkFactorsPerLevel([4, 2, 1])
+    registration = itk.ImageRegistrationMethodv4[FixedImageType, MovingImageType].New(
+        FixedImage=fixed_image,
+        MovingImage=moving_image,
+        Metric=metric,
+        Optimizer=optimizer,
+        InitialTransform=initial_transform,
+    )
+    registration.SetNumberOfLevels(3)
+    registration.SetSmoothingSigmasPerLevel([0])
+    registration.SetShrinkFactorsPerLevel([4, 2, 1])
 
-moving_initial_transform = TransformType.New()
-initial_parameters = moving_initial_transform.GetParameters()
-initial_parameters[0] = 0
-initial_parameters[1] = 0
-moving_initial_transform.SetParameters(initial_parameters)
-registration.SetMovingInitialTransform(moving_initial_transform)
+    moving_initial_transform = TransformType.New()
+    initial_parameters = moving_initial_transform.GetParameters()
+    initial_parameters[0] = 0
+    initial_parameters[1] = 0
+    moving_initial_transform.SetParameters(initial_parameters)
+    registration.SetMovingInitialTransform(moving_initial_transform)
 
-identity_transform = TransformType.New()
-identity_transform.SetIdentity()
-registration.SetFixedInitialTransform(identity_transform)
+    identity_transform = TransformType.New()
+    identity_transform.SetIdentity()
+    registration.SetFixedInitialTransform(identity_transform)
 
-registration.Update()
+    registration.Update()
 
-res_transform = registration.GetTransform()
-final_parameters = res_transform.GetParameters()
-translation_along_x = final_parameters.GetElement(0)
-translation_along_y = final_parameters.GetElement(1)
+    res_transform = registration.GetTransform()
+    final_parameters = res_transform.GetParameters()
+    translation_along_x = final_parameters.GetElement(0)
+    translation_along_y = final_parameters.GetElement(1)
 
-number_of_iterations = optimizer.GetCurrentIteration()
-best_value = optimizer.GetValue()
+    number_of_iterations = optimizer.GetCurrentIteration()
+    best_value = optimizer.GetValue()
 
-print("Result = ")
-print(" Translation X = " + str(translation_along_x))
-print(" Translation Y = " + str(translation_along_y))
-print(" Iterations    = " + str(number_of_iterations))
-print(" Metric value  = " + str(best_value))
+    print("Result = ")
+    print(" Translation X = " + str(translation_along_x))
+    print(" Translation Y = " + str(translation_along_y))
+    print(" Iterations    = " + str(number_of_iterations))
+    print(" Metric value  = " + str(best_value))
 
-CompositeTransformType = itk.CompositeTransform[itk.D, dimension]
-output_composite_transform = CompositeTransformType.New()
-output_composite_transform.AddTransform(moving_initial_transform)
-output_composite_transform.AddTransform(registration.GetModifiableTransform())
+    CompositeTransformType = itk.CompositeTransform[itk.D, dimension]
+    output_composite_transform = CompositeTransformType.New()
+    output_composite_transform.AddTransform(moving_initial_transform)
+    output_composite_transform.AddTransform(registration.GetModifiableTransform())
 
-resample = itk.ResampleImageFilter.New(
-    Input=moving_image,
-    Transform=output_composite_transform,
-    UseReferenceImage=True,
-    ReferenceImage=fixed_image,
-    Interpolator=image1_interpolation,
-)
-resample.SetDefaultPixelValue(130)
-resample.Update()
-resampled_image = resample.GetOutput()
+    resample = itk.ResampleImageFilter.New(
+        Input=moving_image,
+        Transform=output_composite_transform,
+        UseReferenceImage=True,
+        ReferenceImage=fixed_image,
+        Interpolator=image1_interpolation,
+    )
+    resample.SetDefaultPixelValue(130)
+    resample.Update()
+    resampled_image = resample.GetOutput()
 
-itk.imwrite(resampled_image, "registered.nrrd")
+    itk.imwrite(resampled_image, save_path)
+
+if __name__ == "__main__":
+    fixed = "Data/case6_gre1.nrrd"
+    moving = "Data/case6_gre2.nrrd"
+    save = "registered.nrrd"
+    register_images(fixed, moving, save)
+
