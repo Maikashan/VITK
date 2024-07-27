@@ -119,15 +119,21 @@ def create_renderer(path, segmentedPath):
 
 
 def render_3D(paths, segmentedPaths):
-    xmins = [0, 0.5]
-    xmaxs = [0.5, 1]
-    ymins = [0, 0]
-    ymaxs = [1, 1]
+    if len(paths) == 2:
+        xmins = [0, 0.5]
+        xmaxs = [0.5, 1]
+        ymins = [0, 0]
+        ymaxs = [1, 1]
+    else:
+        xmins = [0, 0.5, 0.25]
+        xmaxs = [0.5, 1, 0.75]
+        ymins = [0, 0, 0.5]
+        ymaxs = [0.5, 0.5, 1]
 
     # Create the RenderWindow, Renderer and Interactor.
     ren_win = vtkRenderWindow()
 
-    for i in range(2):
+    for i in range(len(paths)):
         ren = create_renderer(paths[i], segmentedPaths[i])
         ren.SetViewport(xmins[i], ymins[i], xmaxs[i], ymaxs[i])
         ren_win.AddRenderer(ren)
@@ -135,7 +141,7 @@ def render_3D(paths, segmentedPaths):
     iren.SetRenderWindow(ren_win)
     iren.SetInteractorStyle(vtk.vtkInteractorStyleTrackballCamera())
 
-    ren_win.SetSize(1400, 700)
+    ren_win.SetSize(1400, 700 if len(paths) == 2 else 1400)
     ren_win.SetWindowName("VITK")
 
     ren_win.Render()
@@ -143,6 +149,12 @@ def render_3D(paths, segmentedPaths):
 
 
 if __name__ == "__main__":
+
+    # SWITCH TO HAVE DIFFERENCE
     paths = ["Data/case6_gre1.nrrd", "Data/case6_gre2.nrrd"]
     pathsSegmented = ["segmented_1.nrrd", "segmented_2.nrrd"]
+
+    # paths = ["Data/case6_gre1.nrrd", "Data/case6_gre2.nrrd", "Data/case6_gre1.nrrd"]
+    # pathsSegmented = ["segmented_1.nrrd", "segmented_2.nrrd", "CHANGEME.nrrd"]
+
     render_3D(paths, pathsSegmented)
