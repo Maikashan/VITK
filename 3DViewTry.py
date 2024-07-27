@@ -3,18 +3,13 @@
 # noinspection PyUnresolvedReferences
 import vtkmodules.vtkInteractionStyle
 import vtk
+
 # noinspection PyUnresolvedReferences
 import vtkmodules.vtkRenderingOpenGL2
 from vtkmodules.vtkCommonColor import vtkNamedColors
-from vtkmodules.vtkCommonCore import (
-    VTK_VERSION_NUMBER,
-    vtkVersion
-)
+from vtkmodules.vtkCommonCore import VTK_VERSION_NUMBER, vtkVersion
 from vtkmodules.vtkCommonDataModel import vtkMergePoints
-from vtkmodules.vtkFiltersCore import (
-    vtkFlyingEdges3D,
-    vtkMarchingCubes
-)
+from vtkmodules.vtkFiltersCore import vtkFlyingEdges3D, vtkMarchingCubes
 from vtkmodules.vtkFiltersModeling import vtkOutlineFilter
 from vtkmodules.vtkIOImage import vtkMetaImageReader
 from vtkmodules.vtkRenderingCore import (
@@ -22,10 +17,11 @@ from vtkmodules.vtkRenderingCore import (
     vtkPolyDataMapper,
     vtkRenderWindow,
     vtkRenderWindowInteractor,
-    vtkRenderer
+    vtkRenderer,
 )
 
 colors = vtkNamedColors()
+
 
 def create_renderer(path, segmentedPath):
     # Create the pipeline.
@@ -56,7 +52,7 @@ def create_renderer(path, segmentedPath):
 
     iso_actor = vtkActor()
     iso_actor.SetMapper(iso_mapper)
-    iso_actor.GetProperty().SetColor(colors.GetColor3d('Red'))
+    iso_actor.GetProperty().SetColor(colors.GetColor3d("Red"))
 
     outline = vtkOutlineFilter()
     outline.SetInputConnection(reader.GetOutputPort())
@@ -76,8 +72,8 @@ def create_renderer(path, segmentedPath):
 
     # Set the color to a constant value, you might
     # want to try (0.8, 0.4, 0.2)
-    colorFun.AddRGBPoint(0.0, .8, .4, .2)
-    colorFun.AddRGBPoint(255.0, .8, .4, .2)
+    colorFun.AddRGBPoint(1.0, 1.0, 1.0, 1.0)
+    colorFun.AddRGBPoint(255.0, 0.8, 0.4, 0.2)
 
     # Create a volume property
     # Set the opacity and color. Change interpolation
@@ -111,7 +107,7 @@ def create_renderer(path, segmentedPath):
     ren.AddActor(outline_actor)
     ren.AddActor(volume)
     ren.AddActor(iso_actor)
-    ren.SetBackground(colors.GetColor3d('SlateGray'))
+    ren.SetBackground(colors.GetColor3d("SlateGray"))
     ren.GetActiveCamera().SetFocalPoint(0, 0, 0)
     ren.GetActiveCamera().SetPosition(0, -1, 0)
     ren.GetActiveCamera().SetViewUp(0, 0, -1)
@@ -123,7 +119,7 @@ def create_renderer(path, segmentedPath):
 
 
 def main(paths, segmentedPaths):
-    xmins = [0, .5]
+    xmins = [0, 0.5]
     xmaxs = [0.5, 1]
     ymins = [0, 0]
     ymaxs = [1, 1]
@@ -133,19 +129,20 @@ def main(paths, segmentedPaths):
 
     for i in range(2):
         ren = create_renderer(paths[i], segmentedPaths[i])
-        ren.SetViewport(xmins[i], ymins[i], xmaxs[i], ymaxs[i]);
+        ren.SetViewport(xmins[i], ymins[i], xmaxs[i], ymaxs[i])
         ren_win.AddRenderer(ren)
     iren = vtkRenderWindowInteractor()
     iren.SetRenderWindow(ren_win)
+    iren.SetInteractorStyle(vtk.vtkInteractorStyleTrackballCamera())
 
     ren_win.SetSize(1400, 700)
-    ren_win.SetWindowName('VITK')
+    ren_win.SetWindowName("VITK")
 
     ren_win.Render()
     iren.Start()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     paths = ["Data/case6_gre1.nrrd", "Data/case6_gre2.nrrd"]
     pathsSegmented = ["segmented_1.nrrd", "segmented_2.nrrd"]
     main(paths, pathsSegmented)
