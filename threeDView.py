@@ -130,12 +130,22 @@ def render_3D(paths, segmentedPaths):
         ymins = [0, 0, 0.5]
         ymaxs = [0.5, 0.5, 1]
 
+    names = ["First Tumor Segmentation", "Second Tumor Segmentation", "Difference of the 2 segmentations"]
+
     # Create the RenderWindow, Renderer and Interactor.
     ren_win = vtkRenderWindow()
 
     for i in range(len(paths)):
         ren = create_renderer(paths[i], segmentedPaths[i])
         ren.SetViewport(xmins[i], ymins[i], xmaxs[i], ymaxs[i])
+
+        title = vtk.vtkTextActor()
+        title.SetInput(names[i])
+        title.GetTextProperty().SetFontSize(24)
+        title.GetTextProperty().SetColor(1.0, 1.0, 1.0)
+        title.SetPosition(50, 10)
+        ren.AddActor2D(title)
+
         ren_win.AddRenderer(ren)
     iren = vtkRenderWindowInteractor()
     iren.SetRenderWindow(ren_win)
