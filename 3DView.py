@@ -118,7 +118,7 @@ def create_renderer(path, segmentedPath):
     return ren
 
 
-def main(paths, segmentedPaths):
+def render_3D(paths, segmentedPaths):
     xmins = [0, 0.5]
     xmaxs = [0.5, 1]
     ymins = [0, 0]
@@ -145,4 +145,4 @@ def main(paths, segmentedPaths):
 if __name__ == "__main__":
     paths = ["Data/case6_gre1.nrrd", "Data/case6_gre2.nrrd"]
     pathsSegmented = ["segmented_1.nrrd", "segmented_2.nrrd"]
-    main(paths, pathsSegmented)
+    render_3D(paths, pathsSegmented)
