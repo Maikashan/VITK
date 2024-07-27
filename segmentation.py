@@ -3,6 +3,7 @@ import os
 import matplotlib
 import matplotlib.pyplot as plt
 
+
 def segmentation(input_image, save_path):
     seed1X = 122
     seed1Y = 65
@@ -46,6 +47,7 @@ def segmentation(input_image, save_path):
     print("Connected done")
     itk.imwrite(connected_threshold, save_path)
     return connected_threshold
+
 
 if __name__ == "__main__":
     input_filepath = "Data/case6_gre1.nrrd"

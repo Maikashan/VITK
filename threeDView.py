@@ -151,10 +151,10 @@ def render_3D(paths, segmentedPaths):
 if __name__ == "__main__":
 
     # SWITCH TO HAVE DIFFERENCE
-    paths = ["Data/case6_gre1.nrrd", "Data/case6_gre2.nrrd"]
-    pathsSegmented = ["segmented_1.nrrd", "segmented_2.nrrd"]
+    # paths = ["Data/case6_gre1.nrrd", "Data/case6_gre2.nrrd"]
+    # pathsSegmented = ["segmented_1.nrrd", "segmented_2.nrrd"]
 
-    # paths = ["Data/case6_gre1.nrrd", "Data/case6_gre2.nrrd", "Data/case6_gre1.nrrd"]
-    # pathsSegmented = ["segmented_1.nrrd", "segmented_2.nrrd", "CHANGEME.nrrd"]
+    paths = ["Data/case6_gre1.nrrd", "Data/case6_gre2.nrrd", "Data/case6_gre1.nrrd"]
+    pathsSegmented = ["segmented_1.nrrd", "segmented_2.nrrd", "image_diff.nrrd"]
 
     render_3D(paths, pathsSegmented)

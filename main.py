@@ -20,7 +20,7 @@ register_images(file_paths[0], file_paths[1], registered_paths[1])
 input_image = itk.imread(registered_paths[0], pixel_type=itk.D)
 segmentation(input_image, segmented_paths[0])
 
-input_image = itk.imread(registered_paths[0], pixel_type=itk.D)
+input_image = itk.imread(registered_paths[1], pixel_type=itk.D)
 segmentation(input_image, segmented_paths[1])
 
 image_diff(segmented_paths[0], segmented_paths[1])
