@@ -2,6 +2,7 @@ from render import render_images
 from threeDView import render_3D
 from segmentation import segmentation
 from registration import register_images
+from imageDiff import image_diff
 import itk
 import vtk
 
@@ -21,6 +22,8 @@ segmentation(input_image, segmented_paths[0])
 
 input_image = itk.imread(registered_paths[0], pixel_type=itk.D)
 segmentation(input_image, segmented_paths[1])
+
+image_diff(segmented_paths[0], segmented_paths[1])
 
 # readers = []
 # for i in range(2):
