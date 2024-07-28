@@ -8,6 +8,28 @@
 - Segmentation : Kerian & Esteban
 - Visualisation : Esteban
 
+## Utilisation
+
+Lancez la commande suivante, depuis la racine du projet :
+
+```bash
+pip install -r requirements.txt
+```
+
+Puis lancez simplement la commande pour recaler, segmenter et visualisez les tumeurs :
+
+```bash
+python3 main.py
+```
+
+ou
+
+```bash
+python main.py
+```
+
+selon votre version de python.
+
 ## Recalage
 
 Afin de recaler notre image, nous avons décidé d'étudier plusieurs approches. Pour
