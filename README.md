@@ -1,6 +1,31 @@
 # Etude longitudinale de l'évolution d'une tumeur (Esteban Dulaurans et Kerian Allaire)
 
+## Recalage
+
+Afin de recaler notre image, nous avons décidé d'avoir plusieurs approches. Pour
+se faire, un jupyter fut utiliser dans un premier temps. Cela nous a notamment
+permi de tester différentes Transform telles qu'une transformation Eulerienne,
+une transformation de Translation, une transformation Rigid3D de Versor avec une
+initialiseur centré, que cela soit géométriquement ou à l'aide des moments,
+ou encore une transformation affine. Afin d'essayer d'obtenir les meilleures
+transformation possibles, divers hyper paramètres furent testé.
+
+De même, divers optimiseur furent essayer, tel que le LBFGSB Optimiseur avec une
+MeanSquareError comme élément de mesure, un 1+1 évolution avec le Mattes Mutual
+Information comme métrique, ou encore un Regulare Step Gradient Descent
+optimiseur. Après l'utilisation d'une approche de grid search ainsi que des
+vérifications des valeurs des autres métriques tel que la corrélation, ainsi que
+d'une classe observer afin de stopper plus tôt si nécessaire.
+
+Le Regular Step Gradient fut gardé avec une Translation Transform, car ce fut ce
+qui amena les résultats qualitatifs et quantitatifs les plus satisfaisants.
+Afin d'améliorer nos résultats, il serait probablement nécessaire d'amener une
+transformation de rotation, car cela manque ici, et c'est possiblement le goulot
+d'étranglement de notre recalage actuel. Tout le code est présent dans différents
+fichier tel que `registration.py` et `observer.py`.
+
 ## Visualisation
+
 Notre première approche, pour la visualisation, était de passer par des slices
 de l'IRM, qui était changeables intéractivement avec la souris. Elle servit en
 particulier au début, pour pouvoir debug plus facilement les 2 autres parties.

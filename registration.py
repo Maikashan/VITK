@@ -48,12 +48,12 @@ def register_images(fixed_path, moving_path, save_path):
         Optimizer=optimizer,
         InitialTransform=initial_transform,
     )
-       # Set moving initial transform to identity
+    # Set moving initial transform to identity
     moving_initial_transform = TransformType.New()
     moving_initial_transform.SetIdentity()
     registration.SetMovingInitialTransform(moving_initial_transform)
     registration.SetNumberOfLevels(3)
-    registration.SetSmoothingSigmasPerLevel([4,2,1])
+    registration.SetSmoothingSigmasPerLevel([4, 2, 1])
     registration.SetShrinkFactorsPerLevel([4, 2, 1])
 
     moving_initial_transform = TransformType.New()
@@ -144,12 +144,12 @@ def register_images_optimizer(fixed_path, moving_path, save_path):
         Optimizer=optimizer,
         InitialTransform=initial_transform,
     )
-       # Set moving initial transform to identity
+    # Set moving initial transform to identity
     moving_initial_transform = TransformType.New()
     moving_initial_transform.SetIdentity()
     registration.SetMovingInitialTransform(moving_initial_transform)
     registration.SetNumberOfLevels(3)
-    registration.SetSmoothingSigmasPerLevel([4,2,1])
+    registration.SetSmoothingSigmasPerLevel([4, 2, 1])
     registration.SetShrinkFactorsPerLevel([4, 2, 1])
 
     moving_initial_transform = TransformType.New()
@@ -198,6 +198,7 @@ def register_images_optimizer(fixed_path, moving_path, save_path):
     resampled_image = resample.GetOutput()
 
     itk.imwrite(resampled_image, save_path)
+
 
 def registerEvolutionary(fixed_path, moving_path, save_path):
     PixelType = itk.D
