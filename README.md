@@ -8,23 +8,23 @@
 
 ## Recalage
 
-Afin de recaler notre image, nous avons décidé d'avoir plusieurs approches. Pour
-se faire, un jupyter fut utiliser dans un premier temps. Cela nous a notamment
-permi de tester différentes Transform telles qu'une transformation Eulerienne,
-une transformation de Translation, une transformation Rigid3D de Versor avec une
+Afin de recaler notre image, nous avons décidé d'étudier plusieurs approches. Pour
+ce faire, on est passé par un jupyter un premier temps. Cela nous a notamment
+permis de tester différentes transformations, telles qu'une transformation eulérienne,
+une transformation de translation, une transformation Rigid3D de Versor avec une
 initialiseur centré, que cela soit géométriquement ou à l'aide des moments,
 ou encore une transformation affine. Afin d'essayer d'obtenir les meilleures
-transformation possibles, divers hyper paramètres furent testé.
+transformations possibles, on a benchmark divers hyper paramètres.
 
-De même, divers optimiseur furent essayer, tel que le LBFGSB Optimiseur avec une
-MeanSquareError comme élément de mesure, un 1+1 évolution avec le Mattes Mutual
-Information comme métrique, ou encore un Regulare Step Gradient Descent
-optimiseur. Après l'utilisation d'une approche de grid search ainsi que des
-vérifications des valeurs des autres métriques tel que la corrélation, ainsi que
-d'une classe observer afin de stopper plus tôt si nécessaire.
+De même, on a essayé divers optimiseurs, tels que le `LBFGSB` avec une
+`MeanSquareError` comme élément de mesure, un 1 + 1 évolution avec le
+`MattesMutualInformation` comme métrique, ou encore un
+`RegularStepGradientDescent`. Après l'utilisation d'une approche de grid search
+ainsi que des vérifications des valeurs des autres métriques tel que la
+corrélation, ainsi que d'une classe observer afin de stopper plus tôt si nécessaire.
 
-Le Regular Step Gradient fut gardé avec une Translation Transform, car ce fut ce
-qui amena les résultats qualitatifs et quantitatifs les plus satisfaisants.
+Le `RegularStepGradient` avec une `TranslationTransform` a été retenu, donnant
+les résultats qualitatifs et quantitatifs les plus satisfaisants.
 Afin d'améliorer nos résultats, il serait probablement nécessaire d'amener une
 transformation de rotation, car cela manque ici, et c'est possiblement le goulot
 d'étranglement de notre recalage actuel. Tout le code est présent dans différents
