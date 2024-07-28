@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 
 
 def segmentation(input_image, save_path):
+    print("Beginning of segmentation")
     seed1X = 122
     seed1Y = 65
     seed1Z = 84
@@ -32,8 +33,6 @@ def segmentation(input_image, save_path):
     smoother.Update()
     itk.imwrite(smoother, "smoother.nrrd")
 
-    print("Smoothing done")
-
     dimension = input_image.GetImageDimension()
 
     connected_threshold = itk.ConnectedThresholdImageFilter.New(smoother.GetOutput())
@@ -44,8 +43,8 @@ def segmentation(input_image, save_path):
     connected_threshold.AddSeed(seed2)
     connected_threshold.Update()
 
-    print("Connected done")
     itk.imwrite(connected_threshold, save_path)
+    print("End of segmentation")
     return connected_threshold
 
 

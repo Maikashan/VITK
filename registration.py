@@ -8,6 +8,7 @@ from itk.support.types import PixelTypes
 
 
 def register_images(fixed_path, moving_path, save_path):
+    print("Beginning of the registration")
     PixelType = itk.D
     fixed_image = itk.imread(fixed_path, PixelType)
     moving_image = itk.imread(moving_path, PixelType)
@@ -27,7 +28,8 @@ def register_images(fixed_path, moving_path, save_path):
     optimizer.SetNumberOfIterations(200)
     optimizer.SetRelaxationFactor(0.5)
 
-    iteration_update = CommandIterationUpdate(optimizer)
+    # Uncomment this line to have the observer
+    # iteration_update = CommandIterationUpdate(optimizer)
 
     image1_interpolation = itk.LinearInterpolateImageFunction[
         FixedImageType, itk.D
@@ -78,12 +80,12 @@ def register_images(fixed_path, moving_path, save_path):
     number_of_iterations = optimizer.GetCurrentIteration()
     best_value = optimizer.GetValue()
 
-    print("Result = ")
-    print(" Translation X = " + str(translation_along_x))
-    print(" Translation Y = " + str(translation_along_y))
-    print(" Translation Z = " + str(translation_along_z))
-    print(" Iterations    = " + str(number_of_iterations))
-    print(" Metric value  = " + str(best_value))
+    # print("Result = ")
+    # print(" Translation X = " + str(translation_along_x))
+    # print(" Translation Y = " + str(translation_along_y))
+    # print(" Translation Z = " + str(translation_along_z))
+    # print(" Iterations    = " + str(number_of_iterations))
+    # print(" Metric value  = " + str(best_value))
 
     CompositeTransformType = itk.CompositeTransform[itk.D, dimension]
     output_composite_transform = CompositeTransformType.New()
@@ -102,6 +104,7 @@ def register_images(fixed_path, moving_path, save_path):
     resampled_image = resample.GetOutput()
 
     itk.imwrite(resampled_image, save_path)
+    print("Registration has ended")
 
 
 def register_images_optimizer(fixed_path, moving_path, save_path):
