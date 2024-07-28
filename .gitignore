@@ -4,3 +4,4 @@ tmp/
 # Pyenv generated files
 VITK/
 lib64
+__pycache__
