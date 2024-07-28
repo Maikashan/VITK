@@ -28,15 +28,15 @@ les résultats qualitatifs et quantitatifs les plus satisfaisants.
 Afin d'améliorer nos résultats, il serait probablement nécessaire d'amener une
 transformation de rotation, car cela manque ici, et c'est possiblement le goulot
 d'étranglement de notre recalage actuel. Tout le code est présent dans différents
-fichier tel que `registration.py` et `observer.py`.
+fichiers tels que `registration.py` et `observer.py`.
 
 ## Segmentation
 
 On a commencé par simplement reprendre la méthode vue dans un le TP d'ITK, en
 utilisant la classe `ConnectedThresholdImageFilter` après avoir passé un flou
-Gaussien avec la classe `GradientAnisotropicDiffusionImageFilter`. Le plus de
+avec la classe `GradientAnisotropicDiffusionImageFilter`. Le plus de
 temps passé dans cette section était la recherche empirique des points de Seed
-de la méthode, ainsi que les différentes valeurs de threshold. Nous avons
+de la méthode, ainsi que les différentes valeurs de thresholds. Nous avons
 notamment utilisé diverses techniques de visualisations afin de déterminer ces
 valeurs.
 
@@ -65,7 +65,7 @@ pour récupérer les différents axes de coupes. On a entendu le processus à
 plusieurs viewports par la suite, grâce à des Renderer dédiés et la fonction
 `SetViewport` ce qui nous permis de visualiser plus facilement les résultats
 des segmentations (en affichant l'image d'origine avec la région segmentée à
-côté) et des recalages (les 2 images en cote à côte).
+côté) et des recalages (les 2 images en côte à côte).
 
 Dans un deuxième temps, on s'est demandé s'il n'y avait pas une manière plus
 claire de voir le positionnement des 2 nodules. Les slices permettaient
