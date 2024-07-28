@@ -1,7 +1,7 @@
 from render import render_images
 from threeDView import render_3D
 from segmentation import segmentation
-from registration import register_images
+from registration import register_images, registerEvolutionary
 from imageDiff import image_diff
 import itk
 import vtk
@@ -14,6 +14,7 @@ segmented_paths = ["segmented_1.nrrd", "segmented_2.nrrd"]
 
 # REGISTRATION
 register_images(file_paths[0], file_paths[1], registered_paths[1])
+# registerEvolutionary(file_paths[0], file_paths[1], registered_paths[1])
 
 
 # SEGMENTATION
