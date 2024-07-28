@@ -1,11 +1,13 @@
 # Étude longitudinale de l'évolution d'une tumeur (Esteban Dulaurans et Kerian Allaire)
 
 ## Division du travail
+
 - Recalage : Kerian
 - Segmentation : Kerian & Esteban
 - Visualisation : Esteban
 
 ## Recalage
+
 Afin de recaler notre image, nous avons décidé d'avoir plusieurs approches. Pour
 se faire, un jupyter fut utiliser dans un premier temps. Cela nous a notamment
 permi de tester différentes Transform telles qu'une transformation Eulerienne,
@@ -29,18 +31,24 @@ d'étranglement de notre recalage actuel. Tout le code est présent dans différ
 fichier tel que `registration.py` et `observer.py`.
 
 ## Segmentation
+
 On a commencé par simplement reprendre la méthode vue dans un le TP d'ITK, en
 utilisant la classe `ConnectedThresholdImageFilter` après avoir passé un flou
 Gaussien avec la classe `GradientAnisotropicDiffusionImageFilter`. Le plus de
 temps passé dans cette section était la recherche empirique des points de Seed
-de la méthode, ainsi que les différentes valeurs de threshold.
+de la méthode, ainsi que les différentes valeurs de threshold. Nous avons
+notamment utilisé diverses techniques de visualisations afin de déterminer ces
+valeurs.
 
 Nous avons également essayé la méthode `IsolatedConnectedImageFilter`, qui n'a
 pas produit de résultats considérables, comparés à la segmentation que nous
-avions alors.
+avions alors, et ceci malgré des modifications des différents paramètres à notre
+disposition.
 
 Il serait intéressant de faire évaluer notre segmentation à un spécialiste, car
-nous ne sommes pas sûrs d'avoir pris en compte toute la région d'intérêt.
+nous ne sommes pas sûrs d'avoir pris en compte toute la région d'intérêt. De
+plus, il pourrait être intéressant de comparer nos résultats avec un algorithme
+de type watershed.
 
 Vous pouvez trouver l'implémentation dans `segmentation.py`.
 
